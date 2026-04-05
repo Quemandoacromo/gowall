@@ -47,8 +47,9 @@ func replaceColor(img image.Image, from, to color.Color, threshold float64) (ima
 	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
 		for x := bounds.Min.X; x < bounds.Max.X; x++ {
 			originalColor := img.At(x, y)
-			if cpkg.ColorsAreSimilar(originalColor, from, threshold) {
-				newImg.Set(x, y, to)
+			blendWeight := cpkg.ColorSimilarityWeight(originalColor, from, threshold)
+			if blendWeight > 0 {
+				newImg.Set(x, y, cpkg.BlendColor(originalColor, to, blendWeight))
 				replacementMade = true
 			} else {
 				newImg.Set(x, y, originalColor)

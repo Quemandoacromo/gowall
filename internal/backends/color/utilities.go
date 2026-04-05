@@ -7,23 +7,51 @@ import (
 	"math"
 )
 
-// Helper function to check if two colors are similar within a threshold
-func ColorsAreSimilar(c1, c2 color.Color, threshold float64) bool {
+func ColorSimilarityWeight(c1, c2 color.Color, threshold float64) float64 {
 	r1, g1, b1, _ := c1.RGBA()
 	r2, g2, b2, _ := c2.RGBA()
 
-	// Normalize to 8-bit values
 	r1, g1, b1 = r1>>8, g1>>8, b1>>8
 	r2, g2, b2 = r2>>8, g2>>8, b2>>8
 
-	// Euclidean distance
 	distance := math.Sqrt(
 		math.Pow(float64(r1)-float64(r2), 2) +
 			math.Pow(float64(g1)-float64(g2), 2) +
 			math.Pow(float64(b1)-float64(b2), 2),
 	)
 
-	return distance <= threshold
+	if threshold < 0 {
+		threshold = 0
+	}
+	if threshold > 255 {
+		threshold = 255
+	}
+
+	maxDistance := threshold * math.Sqrt(3)
+	if maxDistance <= 0 || distance > maxDistance {
+		return 0
+	}
+
+	return 1 - (distance / maxDistance)
+}
+
+func BlendColor(c1, c2 color.Color, weight float64) color.Color {
+	weight = math.Max(0, math.Min(1, weight))
+
+	r1, g1, b1, a1 := c1.RGBA()
+	r2, g2, b2, a2 := c2.RGBA()
+
+	blend := func(v1, v2 uint32) uint8 {
+		mixed := (1-weight)*float64(v1>>8) + weight*float64(v2>>8)
+		return uint8(math.Round(mixed))
+	}
+
+	return color.RGBA{
+		R: blend(r1, r2),
+		G: blend(g1, g2),
+		B: blend(b1, b2),
+		A: blend(a1, a2),
+	}
 }
 
 func ColorDistance(r1, g1, b1, r2, g2, b2 uint32) float64 {
