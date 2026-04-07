@@ -105,15 +105,22 @@ func (f *GlobalFlagBuilder) WithPreview() *GlobalFlagBuilder {
 	return f
 }
 
+// WithYes adds the --yes flag to auto-accept confirmation prompts.
+func (f *GlobalFlagBuilder) WithYes() *GlobalFlagBuilder {
+	f.cmd.PersistentFlags().BoolVar(&shared.Yes, "yes", false, "Automatically answer yes to confirmation prompts")
+	return f
+}
+
 // addGlobalFlags adds all common global flags to the command.
 func addGlobalFlags(cmd *cobra.Command) {
-	addFlags(cmd).WithBatch().WithDir().WithOutput().WithPreview()
+	addFlags(cmd).WithBatch().WithDir().WithOutput().WithPreview().WithYes()
 }
 
 // Configure logger, spinner with quiet modes for Unix pipes and redirections and validates flags
 func initCli(cmd *cobra.Command, args []string) error {
 	logger.SetQuiet(imageio.IsStdoutOutput(shared, args))
 	utils.SetSpinnerQuiet(imageio.IsStdoutOutput(shared, args))
+	config.GlobalFlags = shared
 	return validateFlagsCompatibility(cmd, args)
 }
 

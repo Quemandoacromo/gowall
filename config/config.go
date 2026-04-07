@@ -27,6 +27,7 @@ type GlobalSubCommandFlags struct {
 	InputFiles        []string
 	Format            string
 	PreviewFlag       string
+	Yes               bool
 }
 
 type themeWrapper struct {
@@ -46,6 +47,7 @@ type Options struct {
 }
 
 var GowallConfig = defaultConfig()
+var GlobalFlags GlobalSubCommandFlags
 
 func LoadConfig() {
 	configDir, err := os.UserHomeDir()

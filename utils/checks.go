@@ -4,10 +4,15 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/Achno/gowall/config"
 	"github.com/Achno/gowall/internal/logger"
 )
 
 func Confirm(msg string) bool {
+	if config.GlobalFlags.Yes {
+		return true
+	}
+
 	var input string
 
 	logger.Printf("%s (y/n): ", msg)
