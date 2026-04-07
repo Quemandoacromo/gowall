@@ -16,23 +16,6 @@ import (
 	"strings"
 )
 
-// Function to expand the tilde (~) to the full home directory path
-// @Example ~/Pictures/flowers.png --> /home/username/Pictures/flowers.png
-func ExpandTilde(paths []string) []string {
-	var expandedPaths []string
-	homeDir, _ := os.UserHomeDir()
-
-	for _, path := range paths {
-		if strings.HasPrefix(path, "~") {
-			path = filepath.Join(homeDir, path[1:])
-		}
-
-		expandedPaths = append(expandedPaths, path)
-	}
-
-	return expandedPaths
-}
-
 // FindBinary checks that the binary exists in dest or $PATH, preferring $PATH.
 // Checks that binary also has executable permissions.
 func FindBinary(binaryNames map[string]string, destFolder string) (string, error) {

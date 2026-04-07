@@ -34,6 +34,8 @@ func defaultConfig() Options {
 		InlineImagePreview:    InlineImagePreviewDefault,
 		ImagePreviewBackend:   ImagePreviewBackend,
 		EnvFilePath:           EnvFilePath,
+		OnnxRuntimeFolderPath: OnnxRuntimeFolderPath,
+		OnnxModelFolderPath:   OnnxModelFolderPath,
 	}
 }
 

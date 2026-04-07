@@ -57,7 +57,7 @@ func ensureEnvironment(libraryPath string) error {
 }
 
 func ensureModelAvailable(model Model) (string, error) {
-	baseDir := config.OnnxModelFolderPath
+	baseDir := config.GowallConfig.OnnxModelFolderPath
 	modelPath := modelCachePath(baseDir, model)
 
 	if _, err := os.Stat(modelPath); err == nil {
@@ -113,7 +113,7 @@ func runtimeDownloadURL() (string, error) {
 
 // SetupOnnxRuntime downloads and extracts only the ONNX runtime shared library
 func SetupOnnxRuntime() error {
-	destFolder := config.OnnxRuntimeFolderPath
+	destFolder := config.GowallConfig.OnnxRuntimeFolderPath
 
 	url, err := runtimeDownloadURL()
 	if err != nil {
@@ -155,7 +155,7 @@ func SetupOnnxRuntime() error {
 
 // CheckOnnxRuntimeInstalled checks if the ONNX runtime shared library is available
 func CheckOnnxRuntimeInstalled() (string, error) {
-	destFolder := config.OnnxRuntimeFolderPath
+	destFolder := config.GowallConfig.OnnxRuntimeFolderPath
 	libName := SharedLibraryName()
 
 	if libName == "" {

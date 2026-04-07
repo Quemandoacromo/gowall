@@ -120,6 +120,15 @@ func addGlobalFlags(cmd *cobra.Command) {
 func initCli(cmd *cobra.Command, args []string) error {
 	logger.SetQuiet(imageio.IsStdoutOutput(shared, args))
 	utils.SetSpinnerQuiet(imageio.IsStdoutOutput(shared, args))
+
+	shared.InputFiles = config.ExpandTilde(shared.InputFiles)
+	if shared.InputDir != "" {
+		shared.InputDir = config.ExpandTilde([]string{shared.InputDir})[0]
+	}
+	if shared.OutputDestination != "" {
+		shared.OutputDestination = config.ExpandTilde([]string{shared.OutputDestination})[0]
+	}
+
 	config.GlobalFlags = shared
 	return validateFlagsCompatibility(cmd, args)
 }

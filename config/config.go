@@ -44,6 +44,34 @@ type Options struct {
 	Themes                 []themeWrapper `yaml:"themes"`
 	EnvConfig              *EnvConfig
 	EnvFilePath            string `yaml:"EnvFilePath"`
+	OnnxRuntimeFolderPath  string `yaml:"OnnxRuntimeFolderPath"`
+	OnnxModelFolderPath    string `yaml:"OnnxModelFolderPath"`
+}
+
+func (o *Options) Resolve() error {
+	var err error
+
+	o.EnvFilePath, err = ResolveHomePath(o.EnvFilePath)
+	if err != nil {
+		return err
+	}
+
+	o.OutputFolder, err = ResolveHomePath(o.OutputFolder)
+	if err != nil {
+		return err
+	}
+
+	o.OnnxRuntimeFolderPath, err = ResolveHomePath(o.OnnxRuntimeFolderPath)
+	if err != nil {
+		return err
+	}
+
+	o.OnnxModelFolderPath, err = ResolveHomePath(o.OnnxModelFolderPath)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 var GowallConfig = defaultConfig()
@@ -82,6 +110,11 @@ func LoadConfig() {
 		return
 	}
 
+	if err := GowallConfig.Resolve(); err != nil {
+		log.Printf("Error resolving config: %v", err)
+		return
+	}
+
 	defaultDir, err := CreateDirectory()
 	if err != nil {
 		log.Fatalf("Error: Could not create output directories: %v", err)
@@ -91,6 +124,6 @@ func LoadConfig() {
 		return
 	}
 
-	EnvConfig := GetEnvConfig(filepath.Join(configDir, GowallConfig.EnvFilePath))
+	EnvConfig := GetEnvConfig(GowallConfig.EnvFilePath)
 	GowallConfig.EnvConfig = EnvConfig
 }

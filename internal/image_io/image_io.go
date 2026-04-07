@@ -265,7 +265,7 @@ func batchIOMulti(flags config.GlobalSubCommandFlags, cmd *cobra.Command) ([]Ima
 	}
 
 	// expand the tilde (~) to the full path in case the shell does not
-	files := utils.ExpandTilde(flags.InputFiles)
+	files := config.ExpandTilde(flags.InputFiles)
 
 	var operations []ImageIO
 	for _, path := range files {
@@ -353,7 +353,7 @@ func batchIO(flags config.GlobalSubCommandFlags, cmd *cobra.Command) []ImageIO {
 	}
 
 	// expand the tilde (~) to the full path in case the shell does not
-	files := utils.ExpandTilde(flags.InputFiles)
+	files := config.ExpandTilde(flags.InputFiles)
 
 	for _, path := range files {
 		absolutePath, err := filepath.Abs(path)
@@ -387,7 +387,7 @@ func determineInput(args []string) ImageReader {
 	}
 
 	// Otherwise file
-	f := utils.ExpandTilde(args)
+	f := config.ExpandTilde(args)
 	return FileReader{Path: f[0]}
 }
 
@@ -468,7 +468,8 @@ func generateFileName(flags config.GlobalSubCommandFlags, args []string, input I
 	}
 
 	// For file input, base output on input filename
-	absInput, err := filepath.Abs(args[0])
+	inputPath := config.ExpandTilde([]string{args[0]})[0]
+	absInput, err := filepath.Abs(inputPath)
 	utils.HandleError(err, "could not resolve absolute path for input")
 	baseName := filepath.Base(absInput)
 	ext, err := determineFileExt(flags, input, nil, cmd)
