@@ -3,7 +3,6 @@ package imageio
 import (
 	"fmt"
 	"image"
-	"image/gif"
 	"io"
 	"net/http"
 	"os"
@@ -12,7 +11,6 @@ import (
 	"time"
 
 	"github.com/Achno/gowall/config"
-	"github.com/Achno/gowall/internal/logger"
 	types "github.com/Achno/gowall/internal/types"
 	"github.com/Achno/gowall/utils"
 )
@@ -46,26 +44,6 @@ func SaveImage(img image.Image, output ImageWriter, format string, metadata type
 	defer file.Close()
 
 	return encoder(file, img)
-}
-
-func SaveGif(gifData gif.GIF, output ImageWriter) error {
-	file, err := output.Create()
-	if err != nil {
-		return fmt.Errorf("failed to create output file: %w", err)
-	}
-
-	// Only close if it's not stdout
-	if output.String() != "/dev/stdout" {
-		defer file.Close()
-	}
-
-	err = gif.EncodeAll(file, &gifData)
-	if err != nil {
-		return fmt.Errorf("while Encoding gif : %w", err)
-	}
-
-	logger.Printf("Gif processed and saved as %s\n\n", output.String())
-	return nil
 }
 
 func SaveUrlAsImg(url string) (string, error) {

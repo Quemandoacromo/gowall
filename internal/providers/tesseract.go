@@ -40,10 +40,6 @@ func (p *TesseractProvider) GetConfig() Config {
 	return p.config
 }
 
-func (p *TesseractProvider) HOCRImage(ctx context.Context, input OCRInput) (*OCRResult, error) {
-	return nil, nil
-}
-
 type TesseractClient struct{}
 
 func (c *TesseractClient) OCRImageCmd(ctx context.Context, image image.Image, lang string) (*OCRResult, error) {

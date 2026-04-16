@@ -199,7 +199,6 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	rootCmd.Flags().BoolVarP(&versionFlag, "version", "v", false, "show gowall version")
 	rootCmd.Flags().BoolVarP(&wallOfTheDayFlag, "wall", "w", false, "fetches the wallpaper of the day!")
 }

@@ -238,24 +238,6 @@ func GiveExecutePerms(path string) error {
 	return os.Chmod(path, info.Mode()|0755)
 }
 
-// ExtractBinary extracts an archive and gives execute permissions to the specified binary.
-func ExtractBinary(src, dest, binaryName string) error {
-	if err := ExtractArchive(src, dest); err != nil {
-		return err
-	}
-
-	// Find and chmod the binary
-	return filepath.WalkDir(dest, func(path string, d os.DirEntry, err error) error {
-		if err != nil {
-			return err
-		}
-		if !d.IsDir() && filepath.Base(path) == binaryName {
-			return GiveExecutePerms(path)
-		}
-		return nil
-	})
-}
-
 // DownloadAndExtract downloads an archive from url, extracts it to dest.
 // If targetName is specified, only that file is kept (others are removed).
 // If giveExec is true, execute permissions are added to the target file.

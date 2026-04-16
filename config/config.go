@@ -120,10 +120,5 @@ func LoadConfig() {
 		log.Fatalf("Error: Could not create output directories: %v", err)
 	}
 	GowallConfig.OutputFolder = defaultDir
-	if _, err := os.Stat(configPath); errors.Is(err, os.ErrNotExist) {
-		return
-	}
-
-	EnvConfig := GetEnvConfig(GowallConfig.EnvFilePath)
-	GowallConfig.EnvConfig = EnvConfig
+	GowallConfig.EnvConfig = GetEnvConfig(GowallConfig.EnvFilePath)
 }
